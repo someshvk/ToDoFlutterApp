@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HomePage extends StatefulWidget {
-
   const HomePage({super.key});
 
   @override
@@ -14,7 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   // refernce the hive box
   final _todoBox = Hive.box('todoBox');
 
@@ -25,18 +23,18 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // if the app is opened first time, then
-    if(_todoBox.get('TODOLIST') == null){
+    if (_todoBox.get('TODOLIST') == null) {
       db.createInitialData();
-    }
-    else{ // if data is already there
+    } else {
+      // if data is already there
       db.loadData();
     }
     super.initState();
   }
 
   // add task action in dialog box
-  void addTask(){
-    setState((){
+  void addTask() {
+    setState(() {
       db.todoList.add([_controller.text, false]);
       _controller.clear();
     });
@@ -45,14 +43,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   // create a new task
-  void createTask(){
-    showDialog(context: context, builder: (context){
-      return DialogBox(
-        controller: _controller,
-        onAdd: addTask,
-        onCancel: () => Navigator.of(context).pop(),
-      );
-    });
+  void createTask() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return DialogBox(
+            controller: _controller,
+            onAdd: addTask,
+            onCancel: () => Navigator.of(context).pop(),
+          );
+        });
   }
 
   // when the checkbox is checked
@@ -74,11 +74,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          title: const Text("To-Do List"),
+          backgroundColor: const Color.fromARGB(255, 17, 17, 24),
+          title: Text(
+            "To-Do List",
+            style: TextStyle(color: Theme.of(context).colorScheme.tertiary)),
           elevation: 0,
         ),
         body: GridPaper(
+          color: Theme.of(context).colorScheme.primary,
           child: SizedBox(
               width: double.infinity,
               height: double.infinity,
@@ -91,11 +96,6 @@ class _HomePageState extends State<HomePage> {
                         onChanged: (value) => checkBoxChanged(value, index),
                         deleteTask: (context) => deleteTodoTask(index));
                   })
-              // child: Center(
-              //     child: Text(
-              //       'Add your tasks here',
-              //       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              // ))
               ),
         ),
         floatingActionButton: Padding(
@@ -107,11 +107,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         drawer: Drawer(
+          backgroundColor: Theme.of(context).colorScheme.background,
           width: MediaQuery.of(context).size.width * 0.7,
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
               ListTile(
+                iconColor: Theme.of(context).colorScheme.tertiary,
+                textColor: Theme.of(context).colorScheme.tertiary,
                 leading: const Icon(
                   Icons.home,
                 ),
@@ -121,6 +124,8 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               ListTile(
+                iconColor: Theme.of(context).colorScheme.tertiary,
+                textColor: Theme.of(context).colorScheme.tertiary,
                 leading: const Icon(
                   Icons.settings,
                 ),

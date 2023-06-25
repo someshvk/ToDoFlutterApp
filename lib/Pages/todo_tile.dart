@@ -6,6 +6,7 @@ class ToDoTile extends StatelessWidget {
   final bool taskCompleted;
   Function(bool?)? onChanged;
   Function(BuildContext)? deleteTask;
+  // ignore: prefer_typing_uninitialized_variables
 
   ToDoTile(
       {super.key,
@@ -37,13 +38,19 @@ class ToDoTile extends StatelessWidget {
             Transform.scale(
                 scale: 0.8,
                 child: Checkbox(
-                    value: taskCompleted,
-                    onChanged: onChanged,
-                    fillColor: MaterialStateProperty.resolveWith(getColor))),
+                  value: taskCompleted,
+                  onChanged: onChanged,
+                  checkColor: Theme.of(context).colorScheme.tertiary,
+                  activeColor: Colors.black,
+                  //fillColor: MaterialStateProperty.resolveWith(getColor)
+                )),
             Expanded(
                 child: Text(
               taskName,
               style: TextStyle(
+                color: taskCompleted
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.tertiary,
                 fontWeight: FontWeight.bold,
                 decoration: taskCompleted
                     ? TextDecoration.lineThrough
@@ -53,7 +60,7 @@ class ToDoTile extends StatelessWidget {
             Transform.scale(
               scale: 0.5,
               child: IconButton(
-                color: Colors.grey,
+                color: Theme.of(context).colorScheme.tertiary,
                 onPressed: () => deleteTask!(context),
                 icon: const Icon(Icons.clear),
               ),
