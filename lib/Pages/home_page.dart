@@ -45,14 +45,14 @@ class _HomePageState extends State<HomePage> {
   // create a new task
   void createTask() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return DialogBox(
-            controller: _controller,
-            onAdd: addTask,
-            onCancel: () => Navigator.of(context).pop(),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          controller: _controller,
+          onAdd: addTask,
+          onCancel: () => Navigator.of(context).pop(),
+        );
+      });
   }
 
   // when the checkbox is checked
@@ -71,15 +71,70 @@ class _HomePageState extends State<HomePage> {
     db.updateData();
   }
 
+  // delete all tasks
+  void deleteAllTasks() {
+    setState(() {
+      db.todoList.clear();
+    });
+    db.updateData();
+  }
+
+  // delete all checked tasks
+  void deleteAllCheckedTasks() {
+    setState(() {
+      db.todoList.removeWhere((task) => task[1] == true);
+    });
+    db.updateData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBody: true,
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 17, 17, 24),
-          title: Text(
-            "To-Do List",
-            style: TextStyle(color: Theme.of(context).colorScheme.tertiary)),
+          backgroundColor: const Color.fromARGB(255, 15, 15, 23),
+          toolbarHeight: MediaQuery.of(context).size.height * 0.09,
+          iconTheme: IconThemeData(color: Theme.of(context).colorScheme.tertiary),
+          title: Center( 
+            child: Text(
+              "To-Do List",
+              style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 27))
+            ),
+          actions: [
+            PopupMenuButton(
+              icon: Icon(Icons.more_vert, color: Theme.of(context).colorScheme.tertiary),
+              color: const Color.fromARGB(255, 33, 33, 51),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 1, 
+                  child: ListTile(
+                    iconColor: Theme.of(context).colorScheme.tertiary,
+                    textColor: Theme.of(context).colorScheme.tertiary,
+                    leading: const Icon(Icons.cancel_rounded),
+                    title: const Text('Delete checked items'),
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 2, 
+                  child: ListTile(
+                    iconColor: Theme.of(context).colorScheme.tertiary,
+                    textColor: Theme.of(context).colorScheme.tertiary,
+                    leading: const Icon(Icons.delete_rounded),
+                    title: const Text('Delete all items'),
+                  ),
+                ),
+              ],
+              onSelected: (value) => {
+                if (value == 1) {
+                  deleteAllCheckedTasks()
+                }
+                else if (value == 2) {
+                  deleteAllTasks()
+                }
+              },
+            ),
+          ],
           elevation: 0,
         ),
         body: GridPaper(
@@ -106,36 +161,39 @@ class _HomePageState extends State<HomePage> {
             child: const Icon(Icons.add),
           ),
         ),
-        drawer: Drawer(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          width: MediaQuery.of(context).size.width * 0.7,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              ListTile(
-                iconColor: Theme.of(context).colorScheme.tertiary,
-                textColor: Theme.of(context).colorScheme.tertiary,
-                leading: const Icon(
-                  Icons.home,
+        drawer: SafeArea(
+          child : Drawer(
+            backgroundColor: Theme.of(context).colorScheme.background,
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                ListTile(
+                  iconColor: Theme.of(context).colorScheme.tertiary,
+                  textColor: Theme.of(context).colorScheme.tertiary,
+                  leading: const Icon(
+                    Icons.home,
+                  ),
+                  title: const Text('Home', style: TextStyle(fontSize: 20)),
+                  onTap: () {
+                    Navigator.pushNamed(context, MyRoutes.homeRoute);
+                  },
                 ),
-                title: const Text('Home'),
-                onTap: () {
-                  Navigator.pushNamed(context, MyRoutes.homeRoute);
-                },
-              ),
-              ListTile(
-                iconColor: Theme.of(context).colorScheme.tertiary,
-                textColor: Theme.of(context).colorScheme.tertiary,
-                leading: const Icon(
-                  Icons.settings,
+                ListTile(
+                  iconColor: Theme.of(context).colorScheme.tertiary,
+                  textColor: Theme.of(context).colorScheme.tertiary,
+                  leading: const Icon(
+                    Icons.settings,
+                  ),
+                  title: const Text('Settings', style: TextStyle(fontSize: 20)),
+                  onTap: () {
+                    Navigator.pushNamed(context, MyRoutes.settingRoute);
+                  },
                 ),
-                title: const Text('Settings'),
-                onTap: () {
-                  Navigator.pushNamed(context, MyRoutes.settingRoute);
-                },
-              ),
-            ],
-          ),
-        ));
+              ],
+            ),
+          )
+       )
+    );
   }
 }

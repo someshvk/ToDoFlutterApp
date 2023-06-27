@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
+// ignore: must_be_immutable
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  Function(bool?)? onChanged;
+  SettingsPage({super.key, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 17, 17, 24),
-        title: Text("Settings",
-            style: TextStyle(color: Theme.of(context).colorScheme.tertiary)),
+        backgroundColor: const Color.fromARGB(255, 15, 15, 23),
+        toolbarHeight: MediaQuery.of(context).size.height * 0.09,
+        title: Center(
+          child: Text("Settings",
+            style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 27))
+          ),
         elevation: 0,
       ),
       body: Padding(
@@ -21,32 +25,23 @@ class SettingsPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Dark Mode'
+              Text(
+                'Dark Mode',
+                style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.tertiary)
               ),
               Transform.scale(
-                scale: 0.7,
-                child: LiteRollingSwitch(
+                scale: 1,
+                child: Checkbox(
                   value: true,
-                  width: 100,
-                  textOn: 'On',
-                  textOff: 'Off',
-                  colorOn: const Color.fromARGB(255, 75, 75, 111),
-                  colorOff: const Color.fromARGB(255, 79, 79, 81),
-                  textSize: 12.0,
-                  iconOn: Icons.dark_mode,
-                  iconOff: Icons.light_mode,
-                  onTap: (){}, 
-                  onDoubleTap: (){}, 
-                  onSwipe: (){}, 
-                  onChanged: (bool state) {
-                    print('turned ${(state) ? 'yes' : 'no'}');
-                  },
+                  onChanged: onChanged,
+                  checkColor: Theme.of(context).colorScheme.tertiary,
+                  activeColor: Colors.black
                 )
               )
             ],
           )
         )
-    ));
+    )
+    );
   }
 }

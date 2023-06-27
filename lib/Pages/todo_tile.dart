@@ -36,29 +36,31 @@ class ToDoTile extends StatelessWidget {
         child: Row(
           children: [
             Transform.scale(
-                scale: 0.8,
+                scale: 1,
                 child: Checkbox(
                   value: taskCompleted,
                   onChanged: onChanged,
-                  checkColor: Theme.of(context).colorScheme.tertiary,
-                  activeColor: Colors.black,
-                  //fillColor: MaterialStateProperty.resolveWith(getColor)
+                  side: BorderSide(color: Theme.of(context).colorScheme.tertiary),
+                  checkColor: Theme.of(context).colorScheme.background,
+                  //activeColor: Colors.black
                 )),
             Expanded(
-                child: Text(
-              taskName,
-              style: TextStyle(
-                color: taskCompleted
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.tertiary,
-                fontWeight: FontWeight.bold,
-                decoration: taskCompleted
-                    ? TextDecoration.lineThrough
-                    : TextDecoration.none,
-              ),
+              child: Text(
+                taskName,
+                style: TextStyle(
+                  color: taskCompleted
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.tertiary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  decoration: taskCompleted
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
+                ),
+                
             )),
             Transform.scale(
-              scale: 0.5,
+              scale: 0.7,
               child: IconButton(
                 color: Theme.of(context).colorScheme.tertiary,
                 onPressed: () => deleteTask!(context),
