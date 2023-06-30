@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/themes/style.dart';
+import 'package:flutter_application/themes/theme_manager.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class SettingsPage extends StatelessWidget {
-  Function(bool?)? onChanged;
-  SettingsPage({super.key, required this.onChanged});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
+
+   @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    
+    final themeManager = Provider.of<ThemeManager>(context);
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 15, 15, 23),
-        toolbarHeight: MediaQuery.of(context).size.height * 0.09,
-        title: Center(
-          child: Text("Settings",
-            style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 27))
-          ),
+        title: Text("Settings",
+          style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 27)),
         elevation: 0,
       ),
       body: Padding(
@@ -27,21 +34,22 @@ class SettingsPage extends StatelessWidget {
             children: [
               Text(
                 'Dark Mode',
-                style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.tertiary)
+                style: TextStyle(fontSize: 20, color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor)
               ),
               Transform.scale(
                 scale: 1,
-                child: Checkbox(
-                  value: true,
-                  onChanged: onChanged,
-                  checkColor: Theme.of(context).colorScheme.tertiary,
-                  activeColor: Colors.black
+                child: Switch(
+                  activeColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                  value: themeManager.darkTheme,
+                  onChanged: (newValue) {
+                    themeManager.darkTheme = !themeManager.darkTheme;
+                  },
                 )
               )
             ],
           )
         )
-    )
+      )
     );
   }
 }

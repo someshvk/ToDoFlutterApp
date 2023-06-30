@@ -1,9 +1,12 @@
 import 'package:flutter_application/Pages/dialog_box.dart';
 import 'package:flutter_application/Pages/todo_tile.dart';
 import 'package:flutter_application/data/database.dart';
+import 'package:flutter_application/themes/style.dart';
+import 'package:flutter_application/themes/theme_manager.dart';
 import 'package:flutter_application/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   // refernce the hive box
   final _todoBox = Hive.box('todoBox');
 
@@ -87,30 +91,31 @@ class _HomePageState extends State<HomePage> {
     db.updateData();
   }
 
+
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
+
     return Scaffold(
         extendBody: true,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 15, 15, 23),
-          toolbarHeight: MediaQuery.of(context).size.height * 0.09,
-          iconTheme: IconThemeData(color: Theme.of(context).colorScheme.tertiary),
+          iconTheme: IconThemeData(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
           title: Center( 
             child: Text(
               "To-Do List",
-              style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 27))
+              style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 27))
             ),
           actions: [
             PopupMenuButton(
-              icon: Icon(Icons.more_vert, color: Theme.of(context).colorScheme.tertiary),
-              color: const Color.fromARGB(255, 33, 33, 51),
+              icon: Icon(Icons.more_vert, color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
+              color: themeManager.darkTheme ? Styles.darkPopUpMenuColor : Styles.lightPopUpMenuColor,
               itemBuilder: (context) => [
                 PopupMenuItem(
                   value: 1, 
                   child: ListTile(
-                    iconColor: Theme.of(context).colorScheme.tertiary,
-                    textColor: Theme.of(context).colorScheme.tertiary,
+                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                     leading: const Icon(Icons.cancel_rounded),
                     title: const Text('Delete checked items'),
                   ),
@@ -118,8 +123,8 @@ class _HomePageState extends State<HomePage> {
                 PopupMenuItem(
                   value: 2, 
                   child: ListTile(
-                    iconColor: Theme.of(context).colorScheme.tertiary,
-                    textColor: Theme.of(context).colorScheme.tertiary,
+                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                     leading: const Icon(Icons.delete_rounded),
                     title: const Text('Delete all items'),
                   ),
@@ -138,7 +143,7 @@ class _HomePageState extends State<HomePage> {
           elevation: 0,
         ),
         body: GridPaper(
-          color: Theme.of(context).colorScheme.primary,
+          color: themeManager.darkTheme ? Styles.darkGridLinesColor : Styles.lightGridLinesColor,
           child: SizedBox(
               width: double.infinity,
               height: double.infinity,
@@ -158,19 +163,20 @@ class _HomePageState extends State<HomePage> {
           child: FloatingActionButton(
             onPressed: () => createTask(),
             focusElevation: 5,
+            backgroundColor: themeManager.darkTheme ? Styles.darkInactiveTextColor : Styles.lightInactiveTextColor,
             child: const Icon(Icons.add),
           ),
         ),
         drawer: SafeArea(
           child : Drawer(
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
             width: MediaQuery.of(context).size.width * 0.7,
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
                 ListTile(
-                  iconColor: Theme.of(context).colorScheme.tertiary,
-                  textColor: Theme.of(context).colorScheme.tertiary,
+                  iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                  textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                   leading: const Icon(
                     Icons.home,
                   ),
@@ -180,8 +186,8 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 ListTile(
-                  iconColor: Theme.of(context).colorScheme.tertiary,
-                  textColor: Theme.of(context).colorScheme.tertiary,
+                  iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                  textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                   leading: const Icon(
                     Icons.settings,
                   ),

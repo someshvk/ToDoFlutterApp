@@ -1,5 +1,8 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
+import 'package:flutter_application/themes/style.dart';
+import 'package:flutter_application/themes/theme_manager.dart';
+import 'package:provider/provider.dart';
 
 class ToDoTile extends StatelessWidget {
   final String taskName;
@@ -15,20 +18,10 @@ class ToDoTile extends StatelessWidget {
       required this.onChanged,
       required this.deleteTask});
 
-  Color getColor(Set<MaterialState> states) {
-    const Set<MaterialState> interactiveStates = <MaterialState>{
-      MaterialState.pressed,
-      MaterialState.hovered,
-      MaterialState.focused,
-    };
-    if (states.any(interactiveStates.contains)) {
-      return Colors.grey;
-    }
-    return Colors.black;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
+    
     return Padding(
       padding: const EdgeInsets.only(left: 3.0, right: 3, top: 3),
       child: Container(
@@ -40,29 +33,28 @@ class ToDoTile extends StatelessWidget {
                 child: Checkbox(
                   value: taskCompleted,
                   onChanged: onChanged,
-                  side: BorderSide(color: Theme.of(context).colorScheme.tertiary),
-                  checkColor: Theme.of(context).colorScheme.background,
-                  //activeColor: Colors.black
+                  side: BorderSide(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
+                  checkColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
+                  activeColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                 )),
             Expanded(
               child: Text(
                 taskName,
                 style: TextStyle(
                   color: taskCompleted
-                    ? Theme.of(context).colorScheme.secondary
-                    : Theme.of(context).colorScheme.tertiary,
+                    ? (themeManager.darkTheme ? Styles.darkInactiveTextColor : Styles.lightInactiveTextColor)
+                    : (themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                   decoration: taskCompleted
                       ? TextDecoration.lineThrough
                       : TextDecoration.none,
                 ),
-                
             )),
             Transform.scale(
               scale: 0.7,
               child: IconButton(
-                color: Theme.of(context).colorScheme.tertiary,
+                color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                 onPressed: () => deleteTask!(context),
                 icon: const Icon(Icons.clear),
               ),

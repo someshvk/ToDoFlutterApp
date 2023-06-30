@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/themes/style.dart';
+import 'package:flutter_application/themes/theme_manager.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class MyButtons extends StatelessWidget {
@@ -8,9 +11,11 @@ class MyButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeManager = Provider.of<ThemeManager>(context);
+    
     return MaterialButton(
       onPressed: onPressed,
-      color: Theme.of(context).colorScheme.secondary,
+      color: themeManager.darkTheme ? Styles.darkInactiveTextColor : Styles.lightInactiveTextColor,
       child: Text(buttonName, style: const TextStyle(fontSize: 20))
     );
   }

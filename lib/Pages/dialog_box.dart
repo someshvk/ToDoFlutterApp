@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/themes/style.dart';
+import 'package:flutter_application/themes/theme_manager.dart';
 import 'package:flutter_application/utils/my_buttons.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class DialogBox extends StatelessWidget {
@@ -16,8 +19,11 @@ class DialogBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final themeManager = Provider.of<ThemeManager>(context);
+    
     return AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
         content: SizedBox(
           height: 120,
           child: Column(
@@ -25,7 +31,7 @@ class DialogBox extends StatelessWidget {
             children: [
               TextField(
                 controller: controller,
-                style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 20),
+                style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 20),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(), hintText: 'Add a new task'),
               ),
@@ -38,8 +44,8 @@ class DialogBox extends StatelessWidget {
                     width: 5,
                   ),
                   Expanded(
-                      child:
-                          MyButtons(buttonName: 'Cancel', onPressed: onCancel))
+                    child:
+                      MyButtons(buttonName: 'Cancel', onPressed: onCancel))
                 ],
               ),
             ],
