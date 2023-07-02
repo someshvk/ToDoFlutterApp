@@ -2,25 +2,31 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class ToDoDatabase{
 
-  // To do list to store tasks
-  List todoList = [];
+  var dataset = {};
+  String  activeCategory = '';
+
   // reference hive box
   final _todoBox = Hive.box('todoBox');
 
   // method when app is first time used
   void createInitialData(){
-    todoList = [
-      ['Demo To Do task', false]
-    ];
+    activeCategory = 'home';
+    dataset = {
+      'home' : [
+        ['Demo To Do task', false],
+      ],
+    };
   }
 
   // method to load the data from database
   void loadData(){
-    todoList = _todoBox.get('TODOLIST');
+    dataset = _todoBox.get('TODOLIST');
+    activeCategory = _todoBox.get('ACTIVECAT');
   }
 
   // method to update the database
   void updateData(){
-    _todoBox.put('TODOLIST', todoList);
+    _todoBox.put('TODOLIST', dataset);
+    _todoBox.put('ACTIVECAT', activeCategory);
   }
 }

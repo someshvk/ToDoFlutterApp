@@ -16,7 +16,7 @@ class MyButtons extends StatelessWidget {
     return MaterialButton(
       onPressed: onPressed,
       color: themeManager.darkTheme ? Styles.darkInactiveTextColor : Styles.lightInactiveTextColor,
-      child: Text(buttonName, style: const TextStyle(fontSize: 20))
+      child: Text(buttonName, style: TextStyle(fontSize: 20, color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor))
     );
   }
 }

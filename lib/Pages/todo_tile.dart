@@ -46,6 +46,7 @@ class ToDoTile extends StatelessWidget {
                     : (themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
+                  decorationThickness: 2,
                   decoration: taskCompleted
                       ? TextDecoration.lineThrough
                       : TextDecoration.none,

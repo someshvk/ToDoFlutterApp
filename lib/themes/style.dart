@@ -10,12 +10,12 @@ abstract class Styles {
   static const Color darkPopUpMenuColor = Color.fromARGB(255, 33, 33, 51);
 
   // light mode colors
-  static const Color lightBackgroundColor = Color.fromRGBO(230,232,236, 1);
-  static const Color lightGridLinesColor = Color.fromRGBO(178, 180, 188, 0.698);
-  static const Color lightInactiveTextColor = Color.fromRGBO(52, 64, 83, 0.849);
-  static const Color lightActiveTextColor = Color.fromRGBO(40, 47, 58, 1);
+  static const Color lightBackgroundColor = Color.fromRGBO(239, 243, 255, 1);
+  static const Color lightGridLinesColor = Color.fromRGBO(109, 112, 121, 0.238);
+  static const Color lightInactiveTextColor = Color.fromRGBO(60, 69, 84, 0.847);
+  static const Color lightActiveTextColor = Color.fromRGBO(21, 25, 31, 1);
   static const Color lightAppBarColor = Color.fromRGBO(185,197,215, 1);
-  static const Color lightPopUpMenuColor = Color.fromARGB(255, 231, 231, 255);
+  static const Color lightPopUpMenuColor = Color.fromARGB(255, 230, 230, 238);
 
 
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {
@@ -25,9 +25,9 @@ abstract class Styles {
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
 
       appBarTheme: AppBarTheme(
-        elevation: 0.0,
+        elevation: 1,
         backgroundColor: isDarkTheme ? darkAppBarColor : lightAppBarColor,
-        toolbarHeight: MediaQuery.of(context).size.height * 0.09,
+        toolbarHeight: MediaQuery.of(context).size.height * 0.07,
       ),
     );
   }

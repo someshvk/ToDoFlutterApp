@@ -30,10 +30,16 @@ class DialogBox extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: controller,
-                style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 20),
+                autofocus: true,
+                style: TextStyle(
+                  color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, 
+                  fontSize: 20
+                ),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(), hintText: 'Add a new task'),
+                  fo
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

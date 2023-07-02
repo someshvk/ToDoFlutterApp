@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // if the app is opened first time, then
-    if (_todoBox.get('TODOLIST') == null) {
+    if (_todoBox.get('TODOLIST') == null && _todoBox.get('ACTIVECAT') == null) {
       db.createInitialData();
     } else {
       // if data is already there
@@ -39,7 +39,8 @@ class _HomePageState extends State<HomePage> {
   // add task action in dialog box
   void addTask() {
     setState(() {
-      db.todoList.add([_controller.text, false]);
+      db.dataset[db.activeCategory]!.add([_controller.text, false]);
+
       _controller.clear();
     });
     Navigator.of(context).pop();
@@ -62,7 +63,7 @@ class _HomePageState extends State<HomePage> {
   // when the checkbox is checked
   void checkBoxChanged(bool? value, int index) {
     setState(() {
-      db.todoList[index][1] = !db.todoList[index][1];
+      db.dataset[db.activeCategory]![index][1] = !db.dataset[db.activeCategory]![index][1];
     });
     db.updateData();
   }
@@ -70,7 +71,7 @@ class _HomePageState extends State<HomePage> {
   // delete todo task
   void deleteTodoTask(int index) {
     setState(() {
-      db.todoList.removeAt(index);
+      db.dataset[db.activeCategory]!.removeAt(index);
     });
     db.updateData();
   }
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
   // delete all tasks
   void deleteAllTasks() {
     setState(() {
-      db.todoList.clear();
+      db.dataset[db.activeCategory]!.clear();
     });
     db.updateData();
   }
@@ -86,7 +87,7 @@ class _HomePageState extends State<HomePage> {
   // delete all checked tasks
   void deleteAllCheckedTasks() {
     setState(() {
-      db.todoList.removeWhere((task) => task[1] == true);
+      db.dataset[db.activeCategory]!.removeWhere((task) => task[1] == true);
     });
     db.updateData();
   }
@@ -103,8 +104,8 @@ class _HomePageState extends State<HomePage> {
           iconTheme: IconThemeData(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
           title: Center( 
             child: Text(
-              "To-Do List",
-              style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 27))
+              'To-Do List',
+              style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 24))
             ),
           actions: [
             PopupMenuButton(
@@ -129,6 +130,15 @@ class _HomePageState extends State<HomePage> {
                     title: const Text('Delete all items'),
                   ),
                 ),
+                PopupMenuItem(
+                  value: 3, 
+                  child: ListTile(
+                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    leading: const Icon(Icons.delete_forever_outlined),
+                    title: const Text('Delete Label'),
+                  ),
+                ),
               ],
               onSelected: (value) => {
                 if (value == 1) {
@@ -144,62 +154,116 @@ class _HomePageState extends State<HomePage> {
         ),
         body: GridPaper(
           color: themeManager.darkTheme ? Styles.darkGridLinesColor : Styles.lightGridLinesColor,
-          child: SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-              child: ListView.builder(
-                  itemCount: db.todoList.length,
-                  itemBuilder: (context, index) {
-                    return ToDoTile(
-                        taskName: db.todoList[index][0],
-                        taskCompleted: db.todoList[index][1],
-                        onChanged: (value) => checkBoxChanged(value, index),
-                        deleteTask: (context) => deleteTodoTask(index));
-                  })
-              ),
-        ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: FloatingActionButton(
-            onPressed: () => createTask(),
-            focusElevation: 5,
-            backgroundColor: themeManager.darkTheme ? Styles.darkInactiveTextColor : Styles.lightInactiveTextColor,
-            child: const Icon(Icons.add),
-          ),
-        ),
-        drawer: SafeArea(
-          child : Drawer(
-            backgroundColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                ListTile(
-                  iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                  textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                  leading: const Icon(
-                    Icons.home,
+          child :
+          Column( 
+            children: [
+              Container(
+                  margin: const EdgeInsets.only(top: 3.0),
+                  padding: const EdgeInsets.only(top : 2.0),
+                  decoration: const BoxDecoration(
+                    border: Border(bottom: BorderSide(width: 11.0, color: Color.fromARGB(198, 188, 139, 244))),
                   ),
-                  title: const Text('Home', style: TextStyle(fontSize: 20)),
-                  onTap: () {
-                    Navigator.pushNamed(context, MyRoutes.homeRoute);
-                  },
+                  child: Text(
+                    db.activeCategory.toUpperCase(),
+                    style: TextStyle(
+                      color: themeManager.darkTheme? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                      fontSize: 21,
+                     ),
+                  ),
                 ),
-                ListTile(
-                  iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                  textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                  leading: const Icon(
-                    Icons.settings,
+              Expanded(
+                child: SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: ListView.builder(
+                      itemCount: db.dataset[db.activeCategory]!.length,
+                      itemBuilder: (context, index) {
+                        return ToDoTile(
+                          taskName: db.dataset[db.activeCategory]![index][0],
+                          taskCompleted: db.dataset[db.activeCategory]![index][1],
+                          onChanged: (value) => checkBoxChanged(value, index),
+                          deleteTask: (context) => deleteTodoTask(index)
+                        );
+                      }
+                    )
                   ),
-                  title: const Text('Settings', style: TextStyle(fontSize: 20)),
-                  onTap: () {
-                    Navigator.pushNamed(context, MyRoutes.settingRoute);
-                  },
                 ),
               ],
             ),
-          )
-       )
+          ),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: FloatingActionButton(
+              onPressed: () => createTask(),
+              focusElevation: 5,
+              backgroundColor: themeManager.darkTheme ? Styles.darkInactiveTextColor : Styles.lightInactiveTextColor,
+              child: const Icon(Icons.add),
+            ),
+          ),
+          drawer: SafeArea(
+            child : Drawer(
+              backgroundColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ListTile(
+                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    leading: const Icon(
+                      Icons.home,
+                    ),
+                    title: const Text('Home', style: TextStyle(fontSize: 20)),
+                    onTap: () {
+                      Navigator.pushNamed(context, MyRoutes.homeRoute);
+                    },
+                  ),
+                   ExpansionTile(
+                    leading: const Icon(
+                      Icons.category_rounded,
+                    ),
+                    title: const Text('Labels', style: TextStyle(fontSize: 20)),
+                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    collapsedIconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    collapsedTextColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    childrenPadding: const EdgeInsets.only(left: 60.0),
+                    children: [
+                      ListTile(
+                        title: const Text('HOME', style: TextStyle(fontSize: 18)),
+                        textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                        onTap: () {
+                          
+                        },
+                      ),
+                      ListTile(
+                        trailing: const Icon(
+                          Icons.add,
+                        ),
+                        iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                        textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                        title: const Text('Add label', style: TextStyle(fontSize: 18)),
+                        onTap: () {
+                          
+                        },
+                      )
+                    ],
+                  ),
+                  ListTile(
+                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    leading: const Icon(
+                      Icons.settings,
+                    ),
+                    title: const Text('Settings', style: TextStyle(fontSize: 20)),
+                    onTap: () {
+                      Navigator.pushNamed(context, MyRoutes.settingRoute);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
     );
   }
 }

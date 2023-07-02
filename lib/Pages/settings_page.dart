@@ -21,6 +21,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
         title: Text("Settings",
           style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 27)),
         elevation: 0,
