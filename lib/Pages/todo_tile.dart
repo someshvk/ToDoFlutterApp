@@ -23,7 +23,7 @@ class ToDoTile extends StatelessWidget {
     final themeManager = Provider.of<ThemeManager>(context);
     
     return Padding(
-      padding: const EdgeInsets.only(left: 3.0, right: 3, top: 3),
+      padding: const EdgeInsets.only(left: 3.0, right: 3),
       child: Container(
         padding: const EdgeInsets.only(left: 3.0, right: 3, top: 3),
         child: Row(
@@ -39,12 +39,12 @@ class ToDoTile extends StatelessWidget {
                 )),
             Expanded(
               child: Text(
-                taskName,
+                ('$taskName.'),
                 style: TextStyle(
                   color: taskCompleted
                     ? (themeManager.darkTheme ? Styles.darkInactiveTextColor : Styles.lightInactiveTextColor)
                     : (themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 18,
                   decorationThickness: 2,
                   decoration: taskCompleted

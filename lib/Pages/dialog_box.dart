@@ -10,12 +10,15 @@ class DialogBox extends StatelessWidget {
   final controller;
   VoidCallback onAdd;
   VoidCallback onCancel;
+  // ignore: prefer_typing_uninitialized_variables
+  final hint;
 
   DialogBox(
       {super.key,
       required this.controller,
       required this.onAdd,
-      required this.onCancel});
+      required this.onCancel,
+      required this.hint});
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +40,12 @@ class DialogBox extends StatelessWidget {
                   color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, 
                   fontSize: 20
                 ),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(), hintText: 'Add a new task'),
-                  fo
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, 
+                    )
+                  ), hintText: hint),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

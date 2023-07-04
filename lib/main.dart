@@ -15,8 +15,6 @@ void main() async {
   // open a hive box
   // ignore: unused_local_variable
   var box = await Hive.openBox('todoBox');
-  // ignore: avoid_print
-  //print(box.get('TODOLIST').cast<String, List<List<dynamic>>>());
 
   runApp(const MyApp());
 }

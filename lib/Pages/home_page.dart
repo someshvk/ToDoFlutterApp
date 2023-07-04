@@ -20,7 +20,8 @@ class _HomePageState extends State<HomePage> {
   // refernce the hive box
   final _todoBox = Hive.box('todoBox');
 
-  final _controller = TextEditingController();
+  final _controller1 = TextEditingController();
+  final _controller2 = TextEditingController();
 
   ToDoDatabase db = ToDoDatabase();
 
@@ -39,9 +40,9 @@ class _HomePageState extends State<HomePage> {
   // add task action in dialog box
   void addTask() {
     setState(() {
-      db.dataset[db.activeCategory]!.add([_controller.text, false]);
+      db.dataset[db.activeCategory]!.add([_controller1.text, false]);
 
-      _controller.clear();
+      _controller1.clear();
     });
     Navigator.of(context).pop();
     db.updateData();
@@ -53,9 +54,10 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return DialogBox(
-          controller: _controller,
+          controller: _controller1,
           onAdd: addTask,
           onCancel: () => Navigator.of(context).pop(),
+          hint: 'Add a new task'
         );
       });
   }
@@ -92,7 +94,74 @@ class _HomePageState extends State<HomePage> {
     db.updateData();
   }
 
+  void changeActiveCatagory(label){
+    setState(() {
+      db.activeCategory = label;
+    });
+    Navigator.of(context).pop();
+    db.updateData();
+  }
 
+  void addKey(){
+    setState(() {
+     db.dataset[_controller2.text] = [];
+     _controller2.clear();
+    });
+    Navigator.of(context).pop();
+    db.updateData(); 
+  }
+
+  // add new label in dataset
+  void addLabel() {
+    Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          controller: _controller2,
+          onAdd: addKey,
+          onCancel: () => Navigator.of(context).pop(),
+          hint: 'Add a label'
+        );
+      }
+    );
+  }
+
+  // delete a label
+  void deleteLabel() {
+    setState(() {
+      db.dataset.remove(db.activeCategory);
+      db.activeCategory = db.dataset.keys.toList()[0];
+    });
+    db.updateData(); 
+  }
+
+  void updateKey(){
+    setState(() {
+     var oldKeyVal = db.dataset.remove(db.activeCategory);
+     db.dataset[_controller2.text] = oldKeyVal;
+     db.activeCategory = _controller2.text;
+     _controller2.clear();
+    });
+    Navigator.of(context).pop();
+    db.updateData(); 
+  }
+
+  // edit a label
+  void editLabel(){
+    _controller2.text = db.activeCategory;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          controller: _controller2,
+          onAdd: updateKey,
+          onCancel: () => Navigator.of(context).pop(),
+          hint: null,
+        );
+      }
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
@@ -147,6 +216,9 @@ class _HomePageState extends State<HomePage> {
                 else if (value == 2) {
                   deleteAllTasks()
                 }
+                else{
+                  deleteLabel()
+                }
               },
             ),
           ],
@@ -158,19 +230,40 @@ class _HomePageState extends State<HomePage> {
           Column( 
             children: [
               Container(
-                  margin: const EdgeInsets.only(top: 3.0),
-                  padding: const EdgeInsets.only(top : 2.0),
-                  decoration: const BoxDecoration(
-                    border: Border(bottom: BorderSide(width: 11.0, color: Color.fromARGB(198, 188, 139, 244))),
-                  ),
-                  child: Text(
-                    db.activeCategory.toUpperCase(),
-                    style: TextStyle(
-                      color: themeManager.darkTheme? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                      fontSize: 21,
-                     ),
+                padding: const EdgeInsets.only(left: 16.0),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                      width: 0.7, 
+                    ),
                   ),
                 ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 3.0, right: 3.0),
+                      child: Text(
+                        db.activeCategory.toUpperCase(),
+                        style: TextStyle(
+                          color: themeManager.darkTheme? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                          fontSize: 26,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Transform.scale(
+                      scale: 0.9,
+                      child: IconButton(
+                        color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                        onPressed: () => editLabel(),
+                        icon: const Icon(Icons.edit),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               Expanded(
                 child: SizedBox(
                   width: double.infinity,
@@ -218,36 +311,41 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pushNamed(context, MyRoutes.homeRoute);
                     },
                   ),
-                   ExpansionTile(
-                    leading: const Icon(
-                      Icons.category_rounded,
-                    ),
-                    title: const Text('Labels', style: TextStyle(fontSize: 20)),
-                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    collapsedIconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    collapsedTextColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    childrenPadding: const EdgeInsets.only(left: 60.0),
-                    children: [
-                      ListTile(
-                        title: const Text('HOME', style: TextStyle(fontSize: 18)),
-                        textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                        onTap: () {
-                          
-                        },
+                  SingleChildScrollView(
+                   child: ExpansionTile(
+                      leading: const Icon(
+                        Icons.category_rounded,
                       ),
-                      ListTile(
-                        trailing: const Icon(
-                          Icons.add,
+                      initiallyExpanded: true,
+                      title: const Text('Labels', style: TextStyle(fontSize: 20)),
+                      iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                      textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                      collapsedIconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                      collapsedTextColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                      childrenPadding: const EdgeInsets.only(left: 60.0),
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: db.dataset.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text((db.dataset.keys.toList()[index][0].toUpperCase() + db.dataset.keys.toList()[index].substring(1).toLowerCase()), style: const TextStyle(fontSize: 18)),
+                              textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                              onTap: () => changeActiveCatagory(db.dataset.keys.toList()[index]),
+                            );
+                          }
                         ),
-                        iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                        textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                        title: const Text('Add label', style: TextStyle(fontSize: 18)),
-                        onTap: () {
-                          
-                        },
-                      )
-                    ],
+                        ListTile(
+                          trailing: const Icon(
+                            Icons.add,
+                          ),
+                          iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                          textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                          title: const Text('Add label', style: TextStyle(fontSize: 18)),
+                          onTap: () => addLabel(),
+                        )
+                      ],
+                    ),
                   ),
                   ListTile(
                     iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
