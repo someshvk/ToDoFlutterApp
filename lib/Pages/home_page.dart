@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage> {
   void addKey(){
     setState(() {
      db.dataset[_controller2.text] = [];
+     db.activeCategory = _controller2.text;
      _controller2.clear();
     });
     Navigator.of(context).pop();
