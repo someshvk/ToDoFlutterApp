@@ -9,14 +9,15 @@ class ToDoTile extends StatelessWidget {
   final bool taskCompleted;
   Function(bool?)? onChanged;
   Function(BuildContext)? deleteTask;
-  // ignore: prefer_typing_uninitialized_variables
+  Function(BuildContext)? editToDo;
 
   ToDoTile(
       {super.key,
       required this.taskName,
       required this.taskCompleted,
       required this.onChanged,
-      required this.deleteTask});
+      required this.deleteTask,
+      required this.editToDo});
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +39,24 @@ class ToDoTile extends StatelessWidget {
                   activeColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                 )),
             Expanded(
-              child: Text(
-                ('$taskName.'),
-                style: TextStyle(
-                  color: taskCompleted
-                    ? (themeManager.darkTheme ? Styles.darkInactiveTextColor : Styles.lightInactiveTextColor)
-                    : (themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  decorationThickness: 2,
-                  decoration: taskCompleted
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
-                ),
-            )),
+              child: GestureDetector(
+                onTap: () => editToDo!(context),
+                child: Text(
+                  ('$taskName.'),
+                  style: TextStyle(
+                    color: taskCompleted
+                      ? (themeManager.darkTheme ? Styles.darkInactiveTextColor : Styles.lightInactiveTextColor)
+                      : (themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    decorationThickness: 2,
+                    decoration: taskCompleted
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                  ),
+                )
+              ),
+            ),
             Transform.scale(
               scale: 0.7,
               child: IconButton(

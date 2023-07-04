@@ -162,6 +162,32 @@ class _HomePageState extends State<HomePage> {
       }
     );
   }
+
+  void updateToDo(int index) {
+    setState(() {
+      db.dataset[db.activeCategory]![index][0] = _controller1.text;
+
+      _controller1.clear();
+    });
+    Navigator.of(context).pop();
+    db.updateData();
+  }
+
+  // edit a ToDo
+  void editToDo(int index){
+    _controller1.text = db.dataset[db.activeCategory]![index][0];
+    showDialog(
+    context: context,
+    builder: (context) {
+      return DialogBox(
+        controller: _controller1,
+        onAdd: () => updateToDo(index),
+        onCancel: () => Navigator.of(context).pop(),
+        hint: null
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeManager = Provider.of<ThemeManager>(context);
@@ -245,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       padding: const EdgeInsets.only(left: 3.0, right: 3.0),
                       child: Text(
-                        db.activeCategory.toUpperCase(),
+                        ('${db.activeCategory.toUpperCase()}.'),
                         style: TextStyle(
                           color: themeManager.darkTheme? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                           fontSize: 26,
@@ -265,20 +291,24 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Expanded(
-                child: SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: ListView.builder(
-                      itemCount: db.dataset[db.activeCategory]!.length,
-                      itemBuilder: (context, index) {
-                        return ToDoTile(
-                          taskName: db.dataset[db.activeCategory]![index][0],
-                          taskCompleted: db.dataset[db.activeCategory]![index][1],
-                          onChanged: (value) => checkBoxChanged(value, index),
-                          deleteTask: (context) => deleteTodoTask(index)
-                        );
-                      }
-                    )
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: ListView.builder(
+                        itemCount: db.dataset[db.activeCategory]!.length,
+                        itemBuilder: (context, index) {
+                          return ToDoTile(
+                            taskName: db.dataset[db.activeCategory]![index][0],
+                            taskCompleted: db.dataset[db.activeCategory]![index][1],
+                            onChanged: (value) => checkBoxChanged(value, index),
+                            deleteTask: (context) => deleteTodoTask(index),
+                            editToDo: (context) => editToDo(index),
+                          );
+                        }
+                      )
+                    ),
                   ),
                 ),
               ],
@@ -329,7 +359,10 @@ class _HomePageState extends State<HomePage> {
                           itemCount: db.dataset.length,
                           itemBuilder: (context, index) {
                             return ListTile(
-                              title: Text((db.dataset.keys.toList()[index][0].toUpperCase() + db.dataset.keys.toList()[index].substring(1).toLowerCase()), style: const TextStyle(fontSize: 18)),
+                              title: Text(
+                                (db.dataset.keys.toList()[index][0].toUpperCase() + db.dataset.keys.toList()[index].substring(1).toLowerCase()), 
+                                style: const TextStyle(fontSize: 18)
+                              ),
                               textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                               onTap: () => changeActiveCatagory(db.dataset.keys.toList()[index]),
                             );
