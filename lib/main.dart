@@ -53,9 +53,8 @@ class _MyAppState extends State<MyApp> {
           builder: (BuildContext context, value, Widget? child) {
             return MaterialApp( 
               theme: Styles.themeData(themeChangeProvider.darkTheme, context),
-              initialRoute: '/home',
+              initialRoute: '/',
               routes: {
-                '/' : (context) => const HomePage(),
                 MyRoutes.homeRoute : (context) => const HomePage(),
                 MyRoutes.settingRoute : (context) => const SettingsPage()
               }

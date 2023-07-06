@@ -27,41 +27,46 @@ class DialogBox extends StatelessWidget {
     
     return AlertDialog(
         backgroundColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
-        content: SizedBox(
-          height: 120,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TextField(
-                textCapitalization: TextCapitalization.sentences,
-                controller: controller,
-                autofocus: true,
-                style: TextStyle(
-                  color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, 
-                  fontSize: 20
-                ),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, 
-                    )
-                  ), hintText: hint),
-              ),
-              Row(
+        content: Builder(
+          builder: (BuildContext context) {
+            return SizedBox(
+              height: 120,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(
-                      child: MyButtons(buttonName: 'Add', onPressed: onAdd)),
-                  const SizedBox(
-                    width: 5,
+                  TextField(
+                    textCapitalization: TextCapitalization.sentences,
+                    controller: controller,
+                    autofocus: true,
+                    style: TextStyle(
+                      color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, 
+                      fontSize: 20
+                    ),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, 
+                        )
+                      ), hintText: hint),
                   ),
-                  Expanded(
-                    child:
-                      MyButtons(buttonName: 'Cancel', onPressed: onCancel))
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                          child: MyButtons(buttonName: 'Add', onPressed: onAdd)),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child:
+                          MyButtons(buttonName: 'Cancel', onPressed: onCancel))
+                    ],
+                  ),
                 ],
               ),
-            ],
-          ),
-        ));
+            );
+          }
+        ),
+      );
   }
 }

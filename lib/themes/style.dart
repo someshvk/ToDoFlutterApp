@@ -24,10 +24,27 @@ abstract class Styles {
 
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
 
+      listTileTheme: ListTileThemeData(
+        iconColor: isDarkTheme ? darkActiveTextColor : lightActiveTextColor,
+        textColor: isDarkTheme ? darkActiveTextColor : lightActiveTextColor
+      ),
+
+      iconTheme: IconThemeData(
+        color: isDarkTheme ? darkActiveTextColor : lightActiveTextColor
+      ),
+
+      expansionTileTheme: ExpansionTileThemeData(
+        iconColor: isDarkTheme ? darkActiveTextColor : lightActiveTextColor,
+        textColor: isDarkTheme ? darkActiveTextColor : lightActiveTextColor,
+        collapsedIconColor: isDarkTheme ? darkActiveTextColor : lightActiveTextColor,
+        collapsedTextColor: isDarkTheme ? darkActiveTextColor : lightActiveTextColor,
+      ),
+
       appBarTheme: AppBarTheme(
         elevation: 1,
         backgroundColor: isDarkTheme ? darkAppBarColor : lightAppBarColor,
         toolbarHeight: MediaQuery.of(context).size.height * 0.07,
+        iconTheme: IconThemeData(color: isDarkTheme ? darkActiveTextColor : lightActiveTextColor),
       ),
     );
   }

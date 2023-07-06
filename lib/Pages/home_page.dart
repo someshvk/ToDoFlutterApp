@@ -37,6 +37,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  void onCancel(controller){
+    controller.clear();
+    Navigator.of(context).pop();
+  }
+
   // add task action in dialog box
   void addTask() {
     setState(() {
@@ -56,7 +61,7 @@ class _HomePageState extends State<HomePage> {
         return DialogBox(
           controller: _controller1,
           onAdd: addTask,
-          onCancel: () => Navigator.of(context).pop(),
+          onCancel: () => onCancel(_controller1),
           hint: 'Add a new task'
         );
       });
@@ -121,7 +126,7 @@ class _HomePageState extends State<HomePage> {
         return DialogBox(
           controller: _controller2,
           onAdd: addKey,
-          onCancel: () => Navigator.of(context).pop(),
+          onCancel: () => onCancel(_controller2),
           hint: 'Add a label'
         );
       }
@@ -157,7 +162,7 @@ class _HomePageState extends State<HomePage> {
         return DialogBox(
           controller: _controller2,
           onAdd: updateKey,
-          onCancel: () => Navigator.of(context).pop(),
+          onCancel: () => onCancel(_controller2),
           hint: null,
         );
       }
@@ -183,7 +188,7 @@ class _HomePageState extends State<HomePage> {
       return DialogBox(
         controller: _controller1,
         onAdd: () => updateToDo(index),
-        onCancel: () => Navigator.of(context).pop(),
+        onCancel: () => onCancel(_controller1),
         hint: null
       );
     });
@@ -197,42 +202,38 @@ class _HomePageState extends State<HomePage> {
         extendBody: true,
         backgroundColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
           title: Center( 
             child: Text(
               'To-Do List',
               style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 24))
-            ),
+          ),
           actions: [
             PopupMenuButton(
-              icon: Icon(Icons.more_vert, color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
+              icon: Icon(
+                Icons.more_vert, 
+                color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+              ),
               color: themeManager.darkTheme ? Styles.darkPopUpMenuColor : Styles.lightPopUpMenuColor,
               itemBuilder: (context) => [
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 1, 
                   child: ListTile(
-                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    leading: const Icon(Icons.cancel_rounded),
-                    title: const Text('Delete checked items'),
+                    leading: Icon(Icons.cancel_rounded),
+                    title: Text('Delete checked items'),
                   ),
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 2, 
                   child: ListTile(
-                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    leading: const Icon(Icons.delete_rounded),
-                    title: const Text('Delete all items'),
+                    leading: Icon(Icons.delete_rounded),
+                    title: Text('Delete all items'),
                   ),
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 3, 
                   child: ListTile(
-                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    leading: const Icon(Icons.delete_forever_outlined),
-                    title: const Text('Delete Label'),
+                    leading: Icon(Icons.delete_forever_outlined),
+                    title: Text('Delete Label'),
                   ),
                 ),
               ],
@@ -298,6 +299,7 @@ class _HomePageState extends State<HomePage> {
                     width: double.infinity,
                     height: double.infinity,
                     child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
                         itemCount: db.dataset[db.activeCategory]!.length,
                         itemBuilder: (context, index) {
                           return ToDoTile(
@@ -332,8 +334,6 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.zero,
                 children: [
                   ListTile(
-                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                     leading: const Icon(
                       Icons.home,
                     ),
@@ -349,13 +349,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                       initiallyExpanded: true,
                       title: const Text('Labels', style: TextStyle(fontSize: 20)),
-                      iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                      textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                      collapsedIconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                      collapsedTextColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                       childrenPadding: const EdgeInsets.only(left: 60.0),
                       children: [
                         ListView.builder(
+                          physics: const BouncingScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: db.dataset.length,
                           itemBuilder: (context, index) {
@@ -364,7 +361,6 @@ class _HomePageState extends State<HomePage> {
                                 (db.dataset.keys.toList()[index][0].toUpperCase() + db.dataset.keys.toList()[index].substring(1).toLowerCase()), 
                                 style: const TextStyle(fontSize: 18)
                               ),
-                              textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                               onTap: () => changeActiveCatagory(db.dataset.keys.toList()[index]),
                             );
                           }
@@ -373,8 +369,6 @@ class _HomePageState extends State<HomePage> {
                           trailing: const Icon(
                             Icons.add,
                           ),
-                          iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                          textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                           title: const Text('Add label', style: TextStyle(fontSize: 18)),
                           onTap: () => addLabel(),
                         )
@@ -382,8 +376,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   ListTile(
-                    iconColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                    textColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
                     leading: const Icon(
                       Icons.settings,
                     ),
