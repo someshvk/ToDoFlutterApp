@@ -26,8 +26,10 @@ class ToDoTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 3.0, right: 3),
       child: Container(
-        padding: const EdgeInsets.only(left: 3.0, right: 3, top: 3),
+        padding: const EdgeInsets.only(left: 3.0, right: 3, bottom: 6),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Transform.scale(
                 scale: 1,
