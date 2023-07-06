@@ -252,71 +252,142 @@ class _HomePageState extends State<HomePage> {
           ],
           elevation: 0,
         ),
-        body: GridPaper(
-          color: themeManager.darkTheme ? Styles.darkGridLinesColor : Styles.lightGridLinesColor,
-          child :
+        body: 
+        Stack(children: [
+          Positioned.fill(
+            child: GridPaper(
+              color: themeManager.darkTheme ? Styles.darkGridLinesColor : Styles.lightGridLinesColor,
+            )
+          ),
           Column( 
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 16.0),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                      width: 0.7, 
-                    ),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 3.0, right: 3.0),
-                      child: Text(
-                        ('${db.activeCategory.toUpperCase()}.'),
-                        style: TextStyle(
-                          color: themeManager.darkTheme? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                          fontSize: 26,
-                          fontWeight: FontWeight.w600,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                          width: 0.7, 
                         ),
                       ),
                     ),
-                    Transform.scale(
-                      scale: 0.9,
-                      child: IconButton(
-                        color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                        onPressed: () => editLabel(),
-                        icon: const Icon(Icons.edit),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                        itemCount: db.dataset[db.activeCategory]!.length,
-                        itemBuilder: (context, index) {
-                          return ToDoTile(
-                            taskName: db.dataset[db.activeCategory]![index][0],
-                            taskCompleted: db.dataset[db.activeCategory]![index][1],
-                            onChanged: (value) => checkBoxChanged(value, index),
-                            deleteTask: (context) => deleteTodoTask(index),
-                            editToDo: (context) => editToDo(index),
-                          );
-                        }
-                      )
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(left: 3.0, right: 3.0),
+                          child: Text(
+                            ('${db.activeCategory.toUpperCase()}.'),
+                            style: TextStyle(
+                              color: themeManager.darkTheme? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Transform.scale(
+                          scale: 0.9,
+                          child: IconButton(
+                            color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                            onPressed: () => editLabel(),
+                            icon: const Icon(Icons.edit),
+                          ),
+                        )
+                      ],
                     ),
                   ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: 
+                        ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                            itemCount: db.dataset[db.activeCategory]!.length,
+                            itemBuilder: (context, index) {
+                              return ToDoTile(
+                                taskName: db.dataset[db.activeCategory]![index][0],
+                                taskCompleted: db.dataset[db.activeCategory]![index][1],
+                                onChanged: (value) => checkBoxChanged(value, index),
+                                deleteTask: (context) => deleteTodoTask(index),
+                                editToDo: (context) => editToDo(index),
+                              );
+                            }
+                          )
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+        ],),
+        // GridPaper(
+        //   color: themeManager.darkTheme ? Styles.darkGridLinesColor : Styles.lightGridLinesColor,
+        //   child :
+        //   Column( 
+        //     children: [
+        //       Container(
+        //         padding: const EdgeInsets.only(left: 16.0),
+        //         decoration: BoxDecoration(
+        //           border: Border(
+        //             bottom: BorderSide(
+        //               color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+        //               width: 0.7, 
+        //             ),
+        //           ),
+        //         ),
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //           children: [
+        //             Container(
+        //               padding: const EdgeInsets.only(left: 3.0, right: 3.0),
+        //               child: Text(
+        //                 ('${db.activeCategory.toUpperCase()}.'),
+        //                 style: TextStyle(
+        //                   color: themeManager.darkTheme? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+        //                   fontSize: 26,
+        //                   fontWeight: FontWeight.w600,
+        //                 ),
+        //               ),
+        //             ),
+        //             Transform.scale(
+        //               scale: 0.9,
+        //               child: IconButton(
+        //                 color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+        //                 onPressed: () => editLabel(),
+        //                 icon: const Icon(Icons.edit),
+        //               ),
+        //             )
+        //           ],
+        //         ),
+        //       ),
+        //       Expanded(
+        //         child: Padding(
+        //           padding: const EdgeInsets.only(top: 10.0),
+        //           child: SizedBox(
+        //             width: double.infinity,
+        //             height: double.infinity,
+        //             child: 
+        //             ListView.builder(
+        //               physics: const BouncingScrollPhysics(),
+        //                 itemCount: db.dataset[db.activeCategory]!.length,
+        //                 itemBuilder: (context, index) {
+        //                   return ToDoTile(
+        //                     taskName: db.dataset[db.activeCategory]![index][0],
+        //                     taskCompleted: db.dataset[db.activeCategory]![index][1],
+        //                     onChanged: (value) => checkBoxChanged(value, index),
+        //                     deleteTask: (context) => deleteTodoTask(index),
+        //                     editToDo: (context) => editToDo(index),
+        //                   );
+        //                 }
+        //               )
+        //             ),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
           floatingActionButton: Padding(
             padding: const EdgeInsets.all(10.0),
             child: FloatingActionButton(
