@@ -22,32 +22,66 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
       appBar: AppBar(
         title: Text("Settings",
-          style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 27)),
+          style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 27, fontWeight: FontWeight.w600)),
         elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 3.0, top: 3),
         child: Container(
           padding: const EdgeInsets.only(left: 9.0, top: 3),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Dark Mode',
-                style: TextStyle(fontSize: 20, color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor)
-              ),
-              Transform.scale(
-                scale: 1,
-                child: Switch(
-                  activeColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                  value: themeManager.darkTheme,
-                  onChanged: (newValue) {
-                    themeManager.darkTheme = !themeManager.darkTheme;
-                  },
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Dark Mode',
+                  style: TextStyle(fontSize: 20, color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor)
+                ),
+                Transform.scale(
+                  scale: 1,
+                  child: Switch(
+                    activeColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                    value: themeManager.darkTheme,
+                    onChanged: (newValue) {
+                      themeManager.darkTheme = !themeManager.darkTheme;
+                    },
+                  )
                 )
-              )
-            ],
-          )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Font Style',
+                  style: TextStyle(fontSize: 20, color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor)
+                ),
+                DropdownButton(
+                  value: themeManager.selectedFont,
+                  focusColor: themeManager.darkTheme ? Styles.darkPopUpMenuColor : Styles.lightPopUpMenuColor,
+                  style: TextStyle(fontSize: 18, color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
+                  onChanged: (String? value) {
+                    themeManager.selectedFont = value!;
+                  },
+                  items: [
+                    DropdownMenuItem(
+                      value: 'Noto Sans Mono',
+                      child: Text(
+                        'Noto Sans',
+                        style: TextStyle(fontSize: 18, color: themeManager.darkTheme? Styles.darkActiveTextColor : Styles.lightActiveTextColor)
+                      )
+                    ),
+                      DropdownMenuItem(
+                      value: 'Inter',
+                      child: Text(
+                        'Inter',
+                        style: TextStyle(fontSize: 18, color: themeManager.darkTheme? Styles.darkActiveTextColor : Styles.lightActiveTextColor)
+                      )),
+                  ],
+                )
+              ],
+            )
+          ],)
         )
       )
     );

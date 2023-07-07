@@ -15,12 +15,12 @@ abstract class Styles {
   static const Color lightInactiveTextColor = Color.fromRGBO(60, 69, 84, 0.847);
   static const Color lightActiveTextColor = Color.fromRGBO(21, 25, 31, 1);
   static const Color lightAppBarColor = Color.fromRGBO(185,197,215, 1);
-  static const Color lightPopUpMenuColor = Color.fromARGB(255, 230, 230, 238);
+  static const Color lightPopUpMenuColor = Color.fromARGB(255, 230, 233, 238);
 
 
-  static ThemeData themeData(bool isDarkTheme, BuildContext context) {
+  static ThemeData themeData(bool isDarkTheme, String fontStyle, BuildContext context) {
     return ThemeData(
-      fontFamily: 'Noto Sans Mono',
+      fontFamily: fontStyle,
 
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
 

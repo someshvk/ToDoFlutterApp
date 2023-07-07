@@ -136,12 +136,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   // delete a label
-  void deleteLabel() {
-    setState(() {
-      db.dataset.remove(db.activeCategory);
-      db.activeCategory = db.dataset.keys.toList()[0];
-    });
-    db.updateData(); 
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? deleteLabel() {
+    if(db.dataset.length > 1){
+      setState(() {
+        db.dataset.remove(db.activeCategory);
+        db.activeCategory = db.dataset.keys.toList()[0];
+      });
+      db.updateData();
+      return null;
+    } else{
+      return ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cannot delete last label. Try adding new and delete.'), backgroundColor: Color.fromARGB(255, 236, 102, 92),)
+      );
+    }
   }
 
   void updateKey(){
@@ -214,7 +221,7 @@ class _HomePageState extends State<HomePage> {
           title: Center( 
             child: Text(
               'To-Do List',
-              style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 24))
+              style: TextStyle(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor, fontSize: 24, fontWeight: FontWeight.w600))
           ),
           actions: [
             PopupMenuButton(
@@ -289,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                             '${db.activeCategory.toUpperCase()}.',
                             style: TextStyle(
                               color: themeManager.darkTheme? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                              fontSize: 20,
+                              fontSize: 21,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -306,30 +313,27 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: 
-                        ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                            itemCount: db.dataset[db.activeCategory]!.length,
-                            itemBuilder: (context, index) {
-                              return ToDoTile(
-                                taskName: db.dataset[db.activeCategory]![index][0],
-                                taskCompleted: db.dataset[db.activeCategory]![index][1],
-                                onChanged: (value) => checkBoxChanged(value, index),
-                                deleteTask: (context) => deleteTodoTask(index),
-                                editToDo: (context) => editToDo(index),
-                              );
-                            }
-                          )
-                        ),
-                      ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: db.dataset[db.activeCategory]!.length,
+                        itemBuilder: (context, index) {
+                          return ToDoTile(
+                            taskName: db.dataset[db.activeCategory]![index][0],
+                            taskCompleted: db.dataset[db.activeCategory]![index][1],
+                            onChanged: (value) => checkBoxChanged(value, index),
+                            deleteTask: (context) => deleteTodoTask(index),
+                            editToDo: (context) => editToDo(index),
+                          );
+                        }
+                      )
                     ),
-                  ],
-                ),
+                  )
+                ],
+              ),
         ],),
           floatingActionButton: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -362,7 +366,7 @@ class _HomePageState extends State<HomePage> {
                         Icons.category_rounded,
                       ),
                       initiallyExpanded: isExpanded,
-                      onExpansionChanged: (newState) => changeExpansionState(),
+                      onExpansionChanged: (newState) => changeExpansionState(), 
                       title: const Text('Labels', style: TextStyle(fontSize: 20)),
                       childrenPadding: const EdgeInsets.only(left: 60.0),
                       children: [
