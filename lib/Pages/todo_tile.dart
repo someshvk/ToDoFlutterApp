@@ -24,56 +24,80 @@ class ToDoTile extends StatelessWidget {
     final themeManager = Provider.of<ThemeManager>(context);
     
     return Padding(
-      padding: const EdgeInsets.only(left: 3.0, right: 3),
-      child: Container(
-        padding: const EdgeInsets.only(left: 3.0, right: 3, top: 6.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Transform.translate(
-              offset: const Offset(-5.0, -12.6), 
-              child: Transform.scale(
-                scale: 1,
-                child: Checkbox(
-                  value: taskCompleted,
-                  onChanged: onChanged,
-                  side: BorderSide(color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
-                  checkColor: themeManager.darkTheme ? Styles.darkBackgroundColor : Styles.lightBackgroundColor,
-                  activeColor: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
-                ))),
-            Expanded(
-              child: GestureDetector(
-                onTap: () => editToDo!(context),
-                child: Text(
-                    ('$taskName.'),
-                    style: TextStyle(
-                      color: taskCompleted
-                        ? (themeManager.darkTheme ? Styles.darkInactiveTextColor : Styles.lightInactiveTextColor)
-                        : (themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                      decorationThickness: 2,
-                      decoration: taskCompleted
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                    ),
+  padding: const EdgeInsets.only(left: 3.0, right: 3),
+  child: Container(
+    padding: const EdgeInsets.only(left: 3.0, right: 3, top: 15.0),
+    child: IntrinsicHeight(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+              width: 24.0,
+              height: 24.0,
+              child: Checkbox(
+                visualDensity: VisualDensity.compact,
+                value: taskCompleted,
+                onChanged: onChanged,
+                side: BorderSide(
+                  color: themeManager.darkTheme
+                      ? Styles.darkActiveTextColor
+                      : Styles.lightActiveTextColor,
+                ),
+                checkColor: themeManager.darkTheme
+                    ? Styles.darkBackgroundColor
+                    : Styles.lightBackgroundColor,
+                activeColor: themeManager.darkTheme
+                    ? Styles.darkActiveTextColor
+                    : Styles.lightActiveTextColor,
+              ),
+            ),
+          Expanded(
+            child: Padding(padding: const EdgeInsets.only(left: 8.0, right: 3.0),
+            child: GestureDetector(
+              onTap: () => editToDo!(context),
+              child: Text(
+                ('$taskName.'),
+                style: TextStyle(
+                  color: taskCompleted
+                      ? (themeManager.darkTheme
+                          ? Styles.darkInactiveTextColor
+                          : Styles.lightInactiveTextColor)
+                      : (themeManager.darkTheme
+                          ? Styles.darkActiveTextColor
+                          : Styles.lightActiveTextColor),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  decorationThickness: 2,
+                  decoration: taskCompleted
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
                 ),
               ),
             ),
-            Transform.translate(
-              offset: const Offset(0.0, -12.6), 
+          )),
+          SizedBox(
+              width: 24.0,
+              height: 24.0,
+              child: Transform.translate(
+              offset: const Offset(-7.0, -8.0),
               child: Transform.scale(
                 scale: 0.7,
                 child: IconButton(
-                  color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor,
+                  color: themeManager.darkTheme
+                      ? Styles.darkActiveTextColor
+                      : Styles.lightActiveTextColor,
                   onPressed: () => deleteTask!(context),
                   icon: const Icon(Icons.clear),
                 ),
-            )),
-          ],
-        ),
+              ),
+            )
+          ),
+        ],
       ),
-    );
+    ),
+  ),
+);
+
   }
 }

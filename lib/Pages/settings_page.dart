@@ -58,7 +58,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 DropdownButton(
                   value: themeManager.selectedFont,
-                  focusColor: themeManager.darkTheme ? Styles.darkPopUpMenuColor : Styles.lightPopUpMenuColor,
+                  dropdownColor: themeManager.darkTheme ? Styles.darkPopUpMenuColor : Styles.lightPopUpMenuColor,
                   style: TextStyle(fontSize: 18, color: themeManager.darkTheme ? Styles.darkActiveTextColor : Styles.lightActiveTextColor),
                   onChanged: (String? value) {
                     themeManager.selectedFont = value!;

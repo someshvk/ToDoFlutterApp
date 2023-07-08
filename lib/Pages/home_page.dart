@@ -109,14 +109,23 @@ class _HomePageState extends State<HomePage> {
     db.updateData();
   }
 
-  void addKey(){
-    setState(() {
-     db.dataset[_controller2.text] = [];
-     db.activeCategory = _controller2.text;
-     _controller2.clear();
-    });
-    Navigator.of(context).pop();
-    db.updateData(); 
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? addKey(){
+    if(db.dataset.containsKey(_controller2.text)){
+      _controller2.clear();
+      Navigator.of(context).pop();
+      return ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Label already exist. Try other labels.'), backgroundColor: Color.fromARGB(255, 236, 102, 92),)
+      );
+    } else{
+      setState(() {
+        db.dataset[_controller2.text] = [];
+        db.activeCategory = _controller2.text;
+        _controller2.clear();
+      });
+      Navigator.of(context).pop();
+      db.updateData();
+      return null;
+    }
   }
 
   // add new label in dataset
